@@ -6,9 +6,12 @@
     <title>Unity WebGL Player | SurferX Wave Rider</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="Build/WebBuild_02.loader.js"></script>
     <script>
         // Add this JavaScript function
+        var gameInstance = null;
         function GetUserId() {
+          var gameInstance = UnityLoader.instantiate("unity-container", "Build/WebBuild_02.loader.js", {onProgress: UnityProgress});
           const urlParams = new URLSearchParams(window.location.search);
           console.log("userid", urlParams);
             const userId = urlParams.get('user_id');
@@ -20,7 +23,7 @@
         }
     </script>
   </head>
-  <body onload="GetUserId();">
+  <body">
     <div id="unity-container"></div>
     <script src="Build/WebBuild_02.loader.js"></script>
     <script>
@@ -133,17 +136,19 @@
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
+          progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
-            gameInstance = unityInstance;  // Add this line
-            loadingBar.style.display = "none";
-            fullscreenButton.onclick = () => {
-                unityInstance.SetFullscreen(1);
-            };
+          gameInstance = unityInstance;
+          loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+          GetUserId(); // Call GetUserId() here after gameInstance is defined
         }).catch((message) => {
-            alert(message);
+          alert(message);
         });
-            };
+      };
+
 
       document.body.appendChild(script);
 
